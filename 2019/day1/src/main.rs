@@ -18,8 +18,8 @@ fn main() {
     // Part 2
     let modules_mass:i32 = module_masses.iter().sum();
 
-    let launch_mass_plus_fuel:i32 = module_masses.iter().
-        map(|mass| grossed_up_mass(mass))
+    let launch_mass_plus_fuel:i32 = module_masses.iter()
+        .map(|mass| grossed_up_mass(mass))
         .sum();
     
     println!("{}", launch_mass_plus_fuel - modules_mass);
