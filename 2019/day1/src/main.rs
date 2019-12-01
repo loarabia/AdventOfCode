@@ -7,11 +7,11 @@ fn main() {
     let input = read_to_string(filename).expect("Reading the file failed");
 
     //Part 1
-    let launch_mass_plus_fuel:i32 = input.lines()
+    let fuel_mass:i32 = input.lines()
             .map(|line| required_fuel(i32::from_str(line).expect("Bad line item")))
             .sum();
     
-    println!("{}", launch_mass_plus_fuel);
+    println!("{}", fuel_mass);
     
     // Part 2
     let module_mass:i32 = input.lines()
