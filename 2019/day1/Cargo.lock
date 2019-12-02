@@ -4,13 +4,22 @@
 name = "day1"
 version = "0.1.0"
 dependencies = [
- "text_io 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde_scan 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
-name = "text_io"
-version = "0.1.7"
+name = "serde"
+version = "1.0.103"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
+[[package]]
+name = "serde_scan"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "serde 1.0.103 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
 [metadata]
-"checksum text_io 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)" = "9658b61ebd1d2a40c276ba2335890b9eb6550b67458a6fbce2022e58c3350a50"
+"checksum serde 1.0.103 (registry+https://github.com/rust-lang/crates.io-index)" = "1217f97ab8e8904b57dd22eb61cde455fa7446a9c1cf43966066da047c1f3702"
+"checksum serde_scan 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)" = "4d6cf8a36e01b0f2c53464875389056c7a269c234e781836dba3ad34ac99a6c4"

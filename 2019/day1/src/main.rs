@@ -11,8 +11,9 @@ fn main() {
 
     //Part 1
     let fuel_mass:i32 = module_masses.iter()
-            .map( |mass| required_fuel(mass))
-            .sum();    
+        .map( |mass| required_fuel(mass))
+        .sum();
+            
     println!("{}", fuel_mass);
     
     // Part 2
