@@ -15,19 +15,8 @@ fn main() {
     let wire1_def:Vec<&str> = wires[0].split(',').collect();
     let wire2_def:Vec<&str> = wires[1].split(',').collect();
 
-    let wire1_pts:Vec<Point> = read_wire(wire1_def);
-    let wire2_pts:Vec<Point> = read_wire(wire2_def);
-
-    let mut set1:HashSet<Point> = HashSet::new();
-    let mut set2:HashSet<Point> = HashSet::new();
-
-    for pt in wire1_pts {
-        set1.insert(pt);
-    }
-    
-    for pt in wire2_pts {
-        set2.insert(pt);
-    }
+    let set1:HashSet<Point> = read_wire(wire1_def);
+    let set2:HashSet<Point> = read_wire(wire2_def);
 
     run_part1(&set1, &set2);
     run_part2(&set1, &set2);
@@ -51,8 +40,9 @@ fn run_part2(wire1:&HashSet<Point>, wire2:&HashSet<Point>){
     println!("pt2: {}", wire1.get(point).unwrap().dist + wire2.get(point).unwrap().dist);
 }
 
-fn read_wire(wire_def:Vec<&str>) -> Vec<Point> {
-    let mut result = Vec::new();
+
+fn read_wire(wire_def:Vec<&str>) -> HashSet<Point> {
+    let mut result = HashSet::new();
     let regex_set:Vec<Regex> = vec![
         Regex::new(r"(U)([0-9]+)").unwrap(),
         Regex::new(r"(D)([0-9]+)").unwrap(),
@@ -70,22 +60,22 @@ fn read_wire(wire_def:Vec<&str>) -> Vec<Point> {
         if let Some(cap) = regex_set[0].captures(def) {
             // Up
             let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
-            result.append(&mut build_list(&mut current, length, |pt| pt.y+=1));
+            build_list(&mut result, &mut current, length, |pt| pt.y+=1);
 
         } else if let Some(cap) = regex_set[1].captures(def) {
             // Down
             let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
-            result.append( &mut build_list(&mut current, length, |pt| pt.y-=1));
+            build_list(&mut result, &mut current, length, |pt| pt.y-=1);
 
         } else if let Some(cap) = regex_set[2].captures(def) {
             // Right
             let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
-            result.append( &mut build_list(&mut current, length, |pt| pt.x+=1));
+            build_list(&mut result, &mut current, length, |pt| pt.x+=1);
 
         } else if let Some(cap) = regex_set[3].captures(def) {
             // Left
             let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
-            result.append( &mut build_list(&mut current, length, |pt| pt.x-=1));
+            build_list(&mut result, &mut current, length, |pt| pt.x-=1);
         } else {
             panic!("HOW?!?");
         }
@@ -93,15 +83,16 @@ fn read_wire(wire_def:Vec<&str>) -> Vec<Point> {
     result
 }
 
-fn build_list<F>(start:&mut Point, length:i32, func:F ) -> Vec<Point>  
-    where F: Fn(&mut Point) {
-    let mut result = Vec::new();
-    for _ in 0..length {
-        func(start);
-        start.dist += 1;
-        result.push(start.clone());
-    }
-    result
+fn build_list<F> (
+    set:&mut HashSet<Point>, 
+    start:&mut Point,
+    length:i32,
+    func:F ) where F: Fn(&mut Point) {
+        for _ in 0..length {
+            func(start);
+            start.dist += 1;
+            set.insert(start.clone());
+        }
 }
 
 #[derive(Clone)]
