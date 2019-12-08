@@ -3,7 +3,7 @@ use std::assert;
 fn main() {
     let min = 271973;
     let max = 785961;
-    
+
     run_part1(min, max);
     run_part2(min, max);
 }

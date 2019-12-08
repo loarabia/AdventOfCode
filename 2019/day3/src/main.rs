@@ -5,7 +5,8 @@ use std::str::FromStr;
 
 use std::collections::HashSet;
 
-use regex::Regex;
+use regex::{Regex, Captures};
+
 fn main() {
     let filename = "input.txt";
     let contents = fs::read_to_string(filename).expect("File access error");
@@ -40,7 +41,6 @@ fn run_part2(wire1:&HashSet<Point>, wire2:&HashSet<Point>){
     println!("pt2: {}", wire1.get(point).unwrap().dist + wire2.get(point).unwrap().dist);
 }
 
-
 fn read_wire(wire_def:Vec<&str>) -> HashSet<Point> {
     let mut result = HashSet::new();
     let regex_set:Vec<Regex> = vec![
@@ -57,24 +57,24 @@ fn read_wire(wire_def:Vec<&str>) -> HashSet<Point> {
         // Capture Group 0 is the whole text.
         // Capture Group 1 is the letter. 
         // Capture Group 2 is an integer.
-        if let Some(cap) = regex_set[0].captures(def) {
+        if let Some(captures) = regex_set[0].captures(def) {
             // Up
-            let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
+            let length = unpack_length(captures);
             build_list(&mut result, &mut current, length, |pt| pt.y+=1);
 
-        } else if let Some(cap) = regex_set[1].captures(def) {
+        } else if let Some(captures) = regex_set[1].captures(def) {
             // Down
-            let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
+            let length = unpack_length(captures);
             build_list(&mut result, &mut current, length, |pt| pt.y-=1);
 
-        } else if let Some(cap) = regex_set[2].captures(def) {
+        } else if let Some(captures) = regex_set[2].captures(def) {
             // Right
-            let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
+            let length = unpack_length(captures);
             build_list(&mut result, &mut current, length, |pt| pt.x+=1);
 
-        } else if let Some(cap) = regex_set[3].captures(def) {
+        } else if let Some(captures) = regex_set[3].captures(def) {
             // Left
-            let length = i32::from_str(cap.get(2).unwrap().as_str()).unwrap();
+            let length = unpack_length(captures);
             build_list(&mut result, &mut current, length, |pt| pt.x-=1);
         } else {
             panic!("HOW?!?");
@@ -83,11 +83,18 @@ fn read_wire(wire_def:Vec<&str>) -> HashSet<Point> {
     result
 }
 
+fn unpack_length(cap:Captures<'_>) -> i32 {
+    //let length = cap.get(2).map_or(-1, |m| i32::from_str(m.as_str()).unwrap() );
+    // Same as below but better error handling. Not really more readable in thie case.
+    i32::from_str(cap.get(2).unwrap().as_str()).unwrap()
+}
+
 fn build_list<F> (
     set:&mut HashSet<Point>, 
     start:&mut Point,
     length:i32,
-    func:F ) where F: Fn(&mut Point) {
+    func:F ) where F: Fn(&mut Point) 
+{
         for _ in 0..length {
             func(start);
             start.dist += 1;
