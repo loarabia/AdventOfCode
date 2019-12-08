@@ -1,10 +1,11 @@
 
 #[derive(PartialEq, Eq, Hash, Copy, Clone)]
 pub enum State {
-    Idle, //
-    WaitingInput,
+    Ready, //
+    WaitingForInput,
+    WroteOutput,
     Running,
-    Halted
+    Halted,
 }
 
 enum Mode {
@@ -30,16 +31,18 @@ pub struct Computer {
     memory:Vec<i32>,
     pub in_reg:Option<i32>,
     pub out_reg:Option<i32>,
+    name:String,
 }
 
 impl Computer {
-    pub fn init( tape:&Vec<i32>) -> Computer {
+    pub fn init( tape:&Vec<i32>, name:String) -> Computer {
         let c = Computer {
             inst_ptr: 0,
-            state: State::Idle,
+            state: State::Ready,
             memory: tape.clone(),
             in_reg: Option::None,
             out_reg: Option::None,
+            name:name,
         };
         c
     }
@@ -128,12 +131,14 @@ impl Computer {
     }
 
     fn execute_read_input(&mut self, mode:Mode) {
-
+        println!("{} - Requesting Input", self.name);
         if self.in_reg == Option::None {
-            self.state = State::WaitingInput;
+            println!("{} - Requesting Input: None ready", self.name);
+            self.state = State::WaitingForInput;
         }
 
         if let Some(value) = self.in_reg {
+            println!("{} - Requesting Input: Recieved", self.name);
             self.write_memory(value, 1, mode);
             self.in_reg = Option::None;
             self.inst_ptr += 2;
@@ -148,6 +153,8 @@ impl Computer {
         //         println!("->{}", self.memory[addr])
         //     },
         // }
+        println!("{} - Writing Output", self.name);
+        self.state = State::WroteOutput;
         self.out_reg = Some(self.read_memory(1, mode));
         self.inst_ptr += 2;
     }
@@ -187,6 +194,7 @@ impl Computer {
     }
     
     fn execute_halt(&mut self) {
+        println!("{} - HALTING!!!!!!!!!!!!!!!!!!!!", self.name);
         self.state = State::Halted;
     }
 
