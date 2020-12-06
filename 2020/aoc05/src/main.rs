@@ -1,7 +1,5 @@
 use std::fs::{read_to_string};
 use std::vec::Vec;
-// use std::str::FromStr;
-// use std::option::Option;
 
 
 fn read_bin(input: &str, beg:usize, end:usize, zero:&str, one:&str) -> u32 {
