@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate lazy_static;
-
 extern crate regex;
 
 use regex::Regex;
@@ -17,7 +16,6 @@ enum Instruction {
 impl FromStr for Instruction {
 
     type Err = regex::Error;  
-
 
     fn from_str(inst_line:&str) -> Result<Self, Self::Err> {
 
@@ -57,8 +55,6 @@ fn part1(instructions: &Vec<Instruction>) -> i32 {
             Instruction::Down(dist) => sub.depth = sub.depth + dist,
         }
     }
-
-
     sub.x*sub.depth
 }
 
@@ -74,8 +70,6 @@ fn part2(instructions: &Vec<Instruction>) -> i32 {
             Instruction::Down(dist) => sub.aim = sub.aim + dist,
         }
     }
-
-
     sub.x*sub.depth
 }
 
@@ -86,7 +80,6 @@ fn main() {
         .lines()
         .map(|line| Instruction::from_str(line).expect("Bad line item"))
         .collect();
-
     println!("{}",part1(&instructions));
     println!("{}",part2(&instructions));
 }
