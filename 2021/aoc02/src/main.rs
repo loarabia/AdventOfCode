@@ -22,28 +22,20 @@ impl FromStr for Instruction {
     fn from_str(inst_line:&str) -> Result<Self, Self::Err> {
 
         lazy_static!{
-            static ref RE_SET: Vec<Regex> = vec![
-                Regex::new(r"(forward) ([0-9]+)").unwrap(),
-                Regex::new(r"(down) ([0-9]+)").unwrap(),
-                Regex::new(r"(up) ([0-9]+)").unwrap(),
-            ];
-        
+            static ref RE:Regex = Regex::new(r"(forward|down|up) ([0-9]+)").unwrap();
         }
+        
+        let captures = RE.captures(inst_line).unwrap();
         
         let instruction;
+        let num = i32::from_str(captures.get(2).unwrap().as_str()).unwrap();
 
-        if let Some(captures) = RE_SET[0].captures(inst_line) {
-            // Forward
-            instruction = Instruction::Forward( i32::from_str(captures.get(2).unwrap().as_str()).unwrap());
-        } else if let Some(captures) = RE_SET[1].captures(inst_line) {
-            // Down
-            instruction = Instruction::Down( i32::from_str(captures.get(2).unwrap().as_str()).unwrap());
-        } else if let Some(captures) = RE_SET[2].captures(inst_line) {
-            // Up
-            instruction = Instruction::Up( i32::from_str(captures.get(2).unwrap().as_str()).unwrap());
-        } else {
-            panic!("BAD INPUT FROM AOC2021?")
-        }
+        instruction = match captures.get(1).unwrap().as_str(){
+            "forward" => Instruction::Forward(num),
+            "down" => Instruction::Down(num),
+            "up" => Instruction::Up(num),
+            _ => panic!("BAD INPUT FROM AOC2021?"),
+        };
 
         Ok(instruction)
     }
