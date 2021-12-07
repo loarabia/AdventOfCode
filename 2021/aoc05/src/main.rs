@@ -69,38 +69,29 @@ impl Pair {
         pts
     }
 
-    // Part 2
+    // Part 2 - and just better way of doing p1 (if did some filtering)
     fn points(&self) -> Vec<Point> {
         let mut pts:Vec<Point> = Vec::new();
-        if self.beg.x == self.end.x {
-            // Vertical Line
-            let x = self.beg.x;
-            for y in self.beg.y..=self.end.y {
-                pts.push(Point{x,y});
-            }
-        } else if self.beg.y == self.end.y {
-            // Horizontal Lines
-            let y = self.beg.y;
-            for x in self.beg.x..=self.end.x {
-                pts.push(Point{x,y});
-            }
-        } else {
-            // 45 Degree  lines ... 
-            let x_step:i32;
-            let y_step:i32;
-            if self.beg.x < self.end.x { x_step = 1 } else { x_step = -1 }
-            if self.beg.y < self.end.y { y_step = 1 } else { y_step = -1 }
-            
-            let mut i = 0;
-            loop {
-                let new_x = self.beg.x + i * x_step;
-                let new_y = self.beg.y + i * y_step;
-                i+=1;
-                pts.push(Point{x:new_x,y:new_y});
-                if(new_x == self.end.x) && new_y == self.end.y{
-                    break;
-                }
-            }
+        let x_step:i32;
+        let y_step:i32;
+        match self.beg.x.cmp(&self.end.x) {
+            std::cmp::Ordering::Less => x_step = 1,
+            std::cmp::Ordering::Greater=> x_step = -1,
+            std::cmp::Ordering::Equal => x_step = 0,
+        }
+        match self.beg.y.cmp(&self.end.y) {
+            std::cmp::Ordering::Less => y_step = 1,
+            std::cmp::Ordering::Greater=> y_step = -1,
+            std::cmp::Ordering::Equal => y_step = 0,
+        }
+        
+        let mut i = 0;
+        loop {
+            let new_x = self.beg.x + i * x_step;
+            let new_y = self.beg.y + i * y_step;
+            i+=1;
+            pts.push( Point{x:new_x,y:new_y} );
+            if new_x == self.end.x && new_y == self.end.y { break; }
         }
         pts
     }
