@@ -15,28 +15,33 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 
 SAMPLE_INPUT_2 = SAMPLE_INPUT_1
 
-class ScratchCard(NamedTuple):
-    id:int
-    winners:Set[int]
-    picks:Set[int]
 
-def read_scratchcard(card_data:str) -> ScratchCard:
+class ScratchCard(NamedTuple):
+    id: int
+    winners: Set[int]
+    picks: Set[int]
+
+
+def read_scratchcard(card_data: str) -> ScratchCard:
     id_str, draws_str = card_data.split(':')
     winners_str, picks_str = draws_str.split("|")
 
     winners = {int(winner_str) for winner_str in winners_str.split()}
-    picks = { int(pick_str) for pick_str in picks_str.split()}
+    picks = {int(pick_str) for pick_str in picks_str.split()}
     return ScratchCard(int(id_str[5:]), winners, picks)
 
-def get_scratchcard_points(card:ScratchCard) -> int:
+
+def get_scratchcard_points(card: ScratchCard) -> int:
     intersection = card.winners & card.picks
     if len(intersection) <= 0:
         return 0
     return 2**(len(intersection)-1)
 
-def get_scratchcard_wins(card:ScratchCard) -> List[int]:
-    wins_count =  len(card.winners & card.picks)
-    return [card.id + i for i in range(1,wins_count+1)]
+
+def get_scratchcard_wins(card: ScratchCard) -> List[int]:
+    wins_count = len(card.winners & card.picks)
+    return [card.id + i for i in range(1, wins_count+1)]
+
 
 def part1(card_strings: List[str]) -> int:
     result: int = 0
@@ -54,8 +59,10 @@ def part2(card_strings: List[str]) -> int:
         card = read_scratchcard(card_string)
         cards[card.id] = card
 
+    # it you try to convert keys to a list and extend the queue with that list you'll get nested lists.
+    # Therefore, just initialize the queue with the keys iterator/view.
     q = deque(cards.keys())
-    
+
     while q:
         result += 1
         card_id = q.popleft()
@@ -66,21 +73,21 @@ def part2(card_strings: List[str]) -> int:
 
 class TestAoC01(unittest.TestCase):
 
-    #@unittest.skip("temp")
+    # @unittest.skip("temp")
     def test_part1_sample_input(self):
         self.assertEqual(13, part1(SAMPLE_INPUT_1.splitlines()))
 
-    #@unittest.skip("temp")
+    # @unittest.skip("temp")
     def test_part1_input(self):
         with open('input.txt') as input:
             lines = input.readlines()
             print(part1(lines))
 
-    #@unittest.skip("temp")
+    # @unittest.skip("temp")
     def test_part2_sample_input(self):
         self.assertEqual(30, part2(SAMPLE_INPUT_2.splitlines()))
 
-    #@unittest.skip("temp")
+    # @unittest.skip("temp")
     def test_part2_input(self):
         with open('input.txt') as input:
             lines = input.readlines()
