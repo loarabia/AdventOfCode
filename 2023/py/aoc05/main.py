@@ -1,7 +1,6 @@
 from collections import deque
 # Need to learn the latest on typed python. Apparently a good number of
 # types I've been using from typing are deprecated...
-from typing import Dict, List, Tuple, Iterable
 import unittest
 
 SAMPLE_INPUT_1 = """\
@@ -53,7 +52,7 @@ MAP_NAMES = [
 ]
 
 
-def read_seeds(line: str) -> List[int]:
+def read_seeds(line: str) -> list[int]:
     seeds = []
     _, *seeds_str = line.split()
     for seed_str in seeds_str:
@@ -61,7 +60,7 @@ def read_seeds(line: str) -> List[int]:
     return seeds
 
 
-def read_seeds_from_ranges(line: str) -> List[int]:
+def read_seeds_from_ranges(line: str) -> list[int]:
     seeds = []
     _, *seeds_str = line.split()
     for i in range(0, len(seeds_str), 2):
@@ -78,7 +77,7 @@ def gen_seeds(line: str):
             yield seed
 
 
-def read_seeds_as_ranges(line: str) -> List[Iterable]:
+def read_seeds_as_ranges(line: str) -> list[range]:
     seed_ranges = []
     _, *seeds_str = line.split()
     for i in range(0, len(seeds_str), 2):
@@ -87,7 +86,7 @@ def read_seeds_as_ranges(line: str) -> List[Iterable]:
     return seed_ranges
 
 
-def read_map(strings: List[str], start: int) -> Dict[int, Tuple[int, int]]:
+def read_map(strings: list[str], start: int) -> dict[int, tuple[int, int]]:
     map = {}
 
     for i in range(start, len(strings)):
@@ -100,7 +99,7 @@ def read_map(strings: List[str], start: int) -> Dict[int, Tuple[int, int]]:
     return map
 
 
-def read_map_as_range(strings: List[str], start: int):
+def read_map_as_range(strings: list[str], start: int):
     map = {}
 
     for i in range(start, len(strings)):
@@ -113,7 +112,7 @@ def read_map_as_range(strings: List[str], start: int):
     return map
 
 
-def read_map_locs(strings: List[str], map_names: str) -> Dict[str, int]:
+def read_map_locs(strings: list[str], map_names: str) -> dict[str, int]:
     map_locs = {}
     for i, line in enumerate(strings):
         for map_name in map_names:
@@ -122,7 +121,7 @@ def read_map_locs(strings: List[str], map_names: str) -> Dict[str, int]:
     return map_locs
 
 
-def lookup(map: Dict[int, Tuple[int, int]], value: int) -> int:
+def lookup(map: dict[int, tuple[int, int]], value: int) -> int:
     translation = value
     for src, meta in map.items():
         dst, len = meta
@@ -131,7 +130,7 @@ def lookup(map: Dict[int, Tuple[int, int]], value: int) -> int:
     return translation
 
 
-def map_ranges(ranges: List[Iterable], map: Dict[Iterable, Iterable]) -> List[Iterable]:
+def map_ranges(ranges: list[range], map: dict[range, range]) -> list[range]:
     new_ranges = []
     # There are two ways I can see to do this.
     # I can sort the source ranges in the map and (assuming they don't overlap) build any missing ranges
@@ -261,7 +260,7 @@ def map_ranges(ranges: List[Iterable], map: Dict[Iterable, Iterable]) -> List[It
     return new_ranges
 
 
-def part1(strings: List[str]) -> int:
+def part1(strings: list[str]) -> int:
     result: int = 0
 
     seeds = read_seeds(strings[0])
@@ -278,7 +277,7 @@ def part1(strings: List[str]) -> int:
     return min(seeds)
 
 
-def part2(strings: List[str]) -> int:
+def part2(strings: list[str]) -> int:
     result: int = None
 
     map_locs = read_map_locs(strings, MAP_NAMES)
@@ -297,7 +296,7 @@ def part2(strings: List[str]) -> int:
     return updated_ranges[0].start
 
 
-def part2_brute(strings: List[str]) -> int:
+def part2_brute(strings: list[str]) -> int:
     result: int = None
 
     map_locs = read_map_locs(strings, MAP_NAMES)
