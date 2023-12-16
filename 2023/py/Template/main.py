@@ -7,12 +7,12 @@ SAMPLE_INPUT_2 = """\
 """
 
 
-def part1(strings: List[str]) -> int:
+def part1(strings: list[str]) -> int:
     result: int = 0
     return result
 
 
-def part2(strings: List[str]) -> int:
+def part2(strings: list[str]) -> int:
     result: int = 0
     return result
 
